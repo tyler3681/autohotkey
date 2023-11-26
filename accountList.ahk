@@ -1,11 +1,11 @@
 Array := Object()
 
-showPathList(){
-  Gui,Add,ListView, r10 w300, LV1|LV2|Title
-  Gui,Add,Button, hidden Default,OK
+showAccountList(){
+  Gui,Add,ListView, r10 w300, LV1|LV2
+  Gui,Add,Button, hidden Default,AcOK
 
   ;csvファイルを読み込んでListViewを作成
-  Loop, Read, pathList.csv, CSV
+  Loop, Read, accountList.csv, CSV
   {
     global Array
 
@@ -18,30 +18,28 @@ showPathList(){
           col1=%A_LoopField%
         }else if(A_Index = 2){
           col2=%A_LoopField%
-        }else if(A_Index = 3){
-          col3=%A_LoopField%
-          LV_Add("", col1, col2, col3)
+          LV_Add("", col1, col2)
         }else{
-          col4=%A_LoopField%
-           Array.Insert(col4)
+          col3=%A_LoopField%
+           Array.Insert(col3)
         }
       }
     }
   }
   LV_ModifyCol()
-  Gui, Show, , pathList
+  Gui, Show, , acountList
 }
 Return
 
-ButtonOK:
+ButtonAcOK:
 global Array
 GuiControlGet, FocusedControl, FocusV
 FocusedRowNumber := LV_GetNext(0, "F")
 LV_GetText(Index, FocusedRowNumber, 1)
-path = % Array[FocusedRowNumber]
-Run explorer.exe %path%
+info = % Array[FocusedRowNumber]
+Clipboard = %info%
 Return
 
-GuiClose:
-GuiEscape:
-Gui, Destroy
+;GuiClose:
+;GuiEscape:
+;Gui, Destroy
