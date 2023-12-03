@@ -25,6 +25,17 @@ vk1C & a::showAccountList()
 ;【下段】
 vk1C & c::Send, !c          ;変換 + c = Alt+c(CLaunch起動。)
 vk1C & z::Reload
+vk1C & b::
+	if(WinExist("ahk_class #32768")){
+		return	;何かのメニュー表示中は出さない
+	}
+	CoordMode,Mouse,Screen
+	Run,C:\Program Files\AutoHotkey\AutoHotkey.exe CtMenu.ahk
+	;メニューにフォーカスを移す処理をして終わる
+	WinWait,ahk_class #32768,,2
+	WinGetPos,wx,wy,,,ahk_class #32768
+	MouseClick,Left,%wx%,%wy%
+return
 ;------------------------------------------------------
 
 ;02.無変換キー(左親指)との組み合わせ
