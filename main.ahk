@@ -1,5 +1,6 @@
-﻿#include pathList.ahk
-#include accountList.ahk
+﻿#include pathList.ahk    ;フォルダパス一覧
+#include accountList.ahk ;アカウントリスト一覧
+#include ctMenu.ahk      ;ランチャ機能
 
 ;もう一つのプロセスが起動された場合、既存プロセスを終了して起動
 #SingleInstance, Force
@@ -26,21 +27,13 @@ vk1C & a::showAccountList()
 vk1C & c::Send, !c          ;変換 + c = Alt+c(CLaunch起動。)
 vk1C & z::Reload
 vk1C & b::
-	if(WinExist("ahk_class #32768")){
-		return	;何かのメニュー表示中は出さない
-	}
-	CoordMode,Mouse,Screen
-	Run,C:\Program Files\AutoHotkey\AutoHotkey.exe CtMenu.ahk
-	;メニューにフォーカスを移す処理をして終わる
-	WinWait,ahk_class #32768,,2
-	WinGetPos,wx,wy,,,ahk_class #32768
-	MouseClick,Left,%wx%,%wy%
+  showCtMenu()
 return
 ;------------------------------------------------------
 
 ;02.無変換キー(左親指)との組み合わせ
 ;▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽
-;【上段】a
+;【上段】ab
 vk1D & u::Send, {Home}     ;無変換 + u = Home
 vk1D & i::Send, {End}      ;無変換 + i = End
 vk1D & tab::Send,^{Tab}     ;無変換 + Tab = Ctrl + Tab（ブラウザのTabの移動）

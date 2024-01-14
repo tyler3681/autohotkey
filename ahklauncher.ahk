@@ -15,7 +15,7 @@ SplitPath, A_LineFile, ahkl_scriptname, ahkl_scriptdir
 ahklaunch = "%A_AhkPath%" "%A_ScriptFullPath%"
 ;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;ファイル読み込み
-launcherinifile := "C:\Users\tylle\googleDrive\02_AutoHotKey\ahklauncher.ini"
+launcherinifile := "C:\git\autohotkey\ini\ahklauncher.ini"
 if launcherinifile = ""
 goto cannotfindlauncherini
 IfNotExist, %launcherinifile%
