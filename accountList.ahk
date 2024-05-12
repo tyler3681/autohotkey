@@ -5,7 +5,7 @@ showAccountList(){
   Gui,Add,Button, hidden Default,AcOK
 
   ;csvファイルを読み込んでListViewを作成
-  Loop, Read, accountList.csv, CSV
+  Loop, Read, ./ini/accountList.csv, CSV
   {
     global Array
 
@@ -21,13 +21,13 @@ showAccountList(){
           LV_Add("", col1, col2)
         }else{
           col3=%A_LoopField%
-           Array.Insert(col3)
+           Array.Push(col3)
         }
       }
     }
   }
   LV_ModifyCol()
-  Gui, Show, , acountList
+  Gui, Show, , accountList
 }
 Return
 
@@ -37,9 +37,5 @@ GuiControlGet, FocusedControl, FocusV
 FocusedRowNumber := LV_GetNext(0, "F")
 LV_GetText(Index, FocusedRowNumber, 1)
 info = % Array[FocusedRowNumber]
-Clipboard = %info%
+Clipboard := info
 Return
-
-;GuiClose:
-;GuiEscape:
-;Gui, Destroy

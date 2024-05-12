@@ -15,7 +15,7 @@ SplitPath, A_LineFile, ahkl_scriptname, ahkl_scriptdir
 ahklaunch = "%A_AhkPath%" "%A_ScriptFullPath%"
 ;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;ファイル読み込み
-launcherinifile := "C:\git\autohotkey\ini\ahklauncher.ini"
+launcherinifile := ".\ini\ahklauncher.ini"
 if launcherinifile = ""
 goto cannotfindlauncherini
 IfNotExist, %launcherinifile%
@@ -74,4 +74,3 @@ edit_this_menu:
 run,%ahkl_scriptdir%\..\otbedit\otbedit.exe %launcherinifile%
 do_nothing:
 return
-
