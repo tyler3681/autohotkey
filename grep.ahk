@@ -1,7 +1,7 @@
 grep(){
 	global gArray
 	gArray := Object()
-	FileRead, Allfile, restart_apl.list
+	FileRead, Allfile, ./ini/file.list
 	filearr := StrSplit(Allfile, "`n","`r")
 	InputBox, inst, GREP, •¶Žš‚ð“ü—Í‚µ‚Ä‚­‚¾‚³‚¢
 	If ErrorLebel = 0
