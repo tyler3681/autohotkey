@@ -5,7 +5,7 @@ showPathList(){
   Gui,Add,Button, hidden Default,OK
 
   ;csvファイルを読み込んでListViewを作成
-  Loop, Read, pathList.csv, CSV
+  Loop, Read, "%A_AhkPath%" "\ini\pathList.csv", CSV
   {
     global Array
 
@@ -34,8 +34,8 @@ showPathList(){
 Return
 
 ButtonOK:
-global Array
-GuiControlGet, FocusedControl, FocusV
+  global Array
+  GuiControlGet, FocusedControl, FocusV
 FocusedRowNumber := LV_GetNext(0, "F")
 LV_GetText(Index, FocusedRowNumber, 1)
 path = % Array[FocusedRowNumber]
