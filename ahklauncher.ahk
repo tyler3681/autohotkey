@@ -1,76 +1,88 @@
-/*
-[launch]
-menuname1=command1
-menuname2=command2
-なファイルを作って、引数に指定。
-=のない行は[launch]以外全部セパレタ。
-日本語不可っぽい。
-%input%と%selectfolder%が使用可能。
-あと、%ahklaunch%使える。
-例:mainmenu=%ahklaunch% "ahklauncher.ini"
-*/
-#NoTrayIcon 
-CoordMode,menu,screen
+#NoTrayIcon
+CoordMode, Menu, Screen
 SplitPath, A_LineFile, ahkl_scriptname, ahkl_scriptdir
-ahklaunch = "%A_AhkPath%" "%A_ScriptFullPath%"
-;;;;;;;;;;;;;;;;;;;;;;;;;;
-;ファイル読み込み
+ahklaunch := """" A_AhkPath """ """ A_ScriptFullPath """"
+
+; 初期設定
 launcherinifile := ".\ini\ahklauncher.ini"
-if launcherinifile = ""
-goto cannotfindlauncherini
-IfNotExist, %launcherinifile%
-goto cannotfindlauncherini
-;;;;;;;;;;;;;;;;;;;;;;;;;;
-;ランチャメニュー作成
-menu,ahklauncher,add
-menu,ahklauncher,deleteall
+
+; 設定ファイルが指定されているか確認
+if (launcherinifile = "")
+{
+    MsgBox, Error: launcher INI file is not specified.
+    return
+}
+
+; 設定ファイルの存在確認
+if !FileExist(launcherinifile)
+{
+    MsgBox, Error: Cannot find launcher INI file: %launcherinifile%
+    return
+}
+
+; ランチャーメニューの作成
+Menu, ahklauncher, Add
+Menu, ahklauncher, DeleteAll
+
 Loop, Read, %launcherinifile%
 {
- IfInString,A_LoopReadLine,[launch]
-  continue
- if ( RegExMatch( "%A_LoopReadLine%" , "^;" ) ) ;コメントうまくできん
-  continue
- IfNotInString,A_LoopReadLine,=
- {
-  menu,ahklauncher,add
-  continue
- }
- StringSplit,launchermenuname,A_LoopReadLine,=
- menu,ahklauncher,add,%launchermenuname1%,launcherlabel
+    ; [launch]セクションをスキップ
+    if InStr(A_LoopReadLine, "[launch]")
+        continue
+
+    ; コメント行をスキップ
+    if (RegExMatch(A_LoopReadLine, "^\s*;"))
+        continue
+
+    ; = が含まれない行をスキップ
+    if !InStr(A_LoopReadLine, "=")
+    {
+        Menu, ahklauncher, Add
+        continue
+    }
+
+    ; メニュー名とコマンドの取得
+    StringSplit, launchermenuname, A_LoopReadLine, =
+    Menu, ahklauncher, Add, %launchermenuname1%, launcherlabel
 }
-menu,ahklauncher,add
-Menu,ahklauncher,Show,,100
+
+Menu, ahklauncher, Show,, 100
 return
 
-cannotfindlauncherini:
-
-menu,ahklauncher,add,edit this menu,edit_this_menu
-menu,ahklauncher,add,do nothing,do_nothing
-
-;Menu,ahklauncher,Show,300,100
-Menu,ahklauncher,Show,,100
-
-return
-
-;;;;;;;;;;;;;;;;;;;;
-;ランチャ用ラベル
+; コマンドの実行ラベル
 launcherlabel:
-IniRead,launchercommand,%launcherinifile%,launch,%A_ThisMenuItem%
+IniRead, launchercommand, %launcherinifile%, launch, %A_ThisMenuItem%
 
-IfInString,launchercommand,`%input`% ;%input%代入
-InputBox, input , input parameter, , , 170, 120
+; %input%が含まれる場合、入力ボックスを表示
+if InStr(launchercommand, "%input%")
+{
+    InputBox, input, Input Parameter, , , 170, 120
+    if ErrorLevel
+        return
+    StringReplace, launchercommand, launchercommand, %input%, %input%, All
+}
 
-IfInString,launchercommand,`%selectfolder`% ;%selectfolder%代入
-FileSelectFolder,selectfolder,,0,Select Folder
+; %selectfolder%が含まれる場合、フォルダ選択ダイアログを表示
+if InStr(launchercommand, "%selectfolder%")
+{
+    FileSelectFolder, selectfolder, , 0, Select Folder
+    if ErrorLevel
+        return
+    StringReplace, launchercommand, launchercommand, %selectfolder%, %selectfolder%, All
+}
 
-Transform, launchercommand, Deref, %launchercommand% ;変数を全部展開
+; コマンドを実行
+Transform, launchercommand, Deref, %launchercommand%
 SplitPath, launchercommand, exename, exedir
 SetWorkingDir, %exedir%
-;msgbox,%launchercommand%
-run,%launchercommand%
+Run, %launchercommand%
 return
 
+; メニューの編集
 edit_this_menu:
-run,%ahkl_scriptdir%\..\otbedit\otbedit.exe %launcherinifile%
+Run, %ahkl_scriptdir%\..\otbedit\otbedit.exe %launcherinifile%
+return
+
+; 何もしない
 do_nothing:
 return
