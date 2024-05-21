@@ -1,6 +1,6 @@
 ﻿#include pathList.ahk    ;フォルダパス一覧
 #include accountList.ahk ;アカウントリスト一覧
-#include ctMenu.ahk      ;ランチャ機能
+#include ahklauncher.ahk ;ランチャ機能
 
 ;もう一つのプロセスが起動された場合、既存プロセスを終了して起動
 #SingleInstance, Force
@@ -27,7 +27,7 @@ vk1C & a::showAccountList()
 vk1C & c::Send, !c          ;変換 + c = Alt+c(CLaunch起動。)
 vk1C & z::Reload
 vk1C & b::
-  showCtMenu()
+  Run, ahklauncher.ahk
 return
 ;------------------------------------------------------
 
